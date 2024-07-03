@@ -1,6 +1,0 @@
-
-config ttyd
-	option interface '@lan'
- 	option interface '@wg'
-	option command '/bin/login -f root'
-
