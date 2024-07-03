@@ -1,0 +1,51 @@
+ 
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config globals 'globals'
+	option ula_prefix 'fd29:ca95:b63f::/48'
+
+config interface 'lan'
+	option type 'bridge'
+	option ifname 'eth0.1'
+	option proto 'static'
+	option ipaddr '192.168.5.55'
+	option netmask '255.255.255.0'
+	option ip6assign '60'
+
+config interface 'wan'
+	option ifname 'usb0'
+	option proto 'dhcp'
+
+config interface 'wan6'
+	option ifname 'usb0'
+	option proto 'dhcpv6'
+
+config switch
+	option name 'switch0'
+	option reset '1'
+	option enable_vlan '1'
+
+config switch_vlan
+	option device 'switch0'
+	option vlan '1'
+	option ports '0 6t'
+
+config interface 'wg0'
+	option proto 'wireguard'
+	option private_key 'eEZvIYj5mIqmzsU5BlPuu1zx8zVm4aitElNpYc+tAHk='
+	list addresses '10.100.0.6'
+
+config wireguard_wg0
+	option public_key 'YS9lJ2uJnmo+9R+rLldmM/b0yExiMk8Wa2psrJy650E='
+	option preshared_key 'wibwgy9m0JsdYXdBkRofoTSnuX2goOCx4En15owyHXo='
+	list allowed_ips '10.100.0.0/24'
+	list allowed_ips '192.168.3.0/24'
+	option route_allowed_ips '1'
+	option endpoint_host 'ddns.d8yxzx.top'
+	option endpoint_port '53000'
+	option persistent_keepalive '25'
+

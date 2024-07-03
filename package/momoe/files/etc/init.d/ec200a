@@ -1,0 +1,77 @@
+#!/bin/sh /etc/rc.common
+START=80
+
+restart()
+{                                                                                                       
+	/usr/share/moat "AT+CFUN=1,1"
+	/usr/share/ec200a.sh
+}
+
+start()
+{	
+	/usr/share/moat "AT+QNETDEVCTL=3,1"
+	/usr/share/ec200a.sh
+}
+
+EXTRA_COMMANDS="check_status"
+check_status(){
+case "$1" in
+"imei")
+        echo -n `/usr/share/moat AT+CGSN | grep -oE '[0-9]+'`
+;;
+"iccid")
+        echo -n `/usr/share/moat AT+QCCID | awk -F': ' '/\+QCCID:/{print $2}'`
+;;
+"isp")
+        echo -n `/usr/share/moat AT+COPS? | awk -F': ' '/\+COPS:/{print $2}' | cut -d',' -f3 | tr -d '"'`
+;;
+"band")
+        echo -n `/usr/share/moat AT+QNWINFO | awk -F': ' '/\+QNWINFO:/{print $2}' | cut -d',' -f3 | tr -d '"'`
+;;
+"signal")
+        RSRP=`/usr/share/moat AT+QCSQ | awk -F': ' '/\+QCSQ:/{print $2}' | cut -d',' -f3`
+        RSRQ=`/usr/share/moat AT+QCSQ | awk -F': ' '/\+QCSQ:/{print $2}' | cut -d',' -f5`
+        echo -n "RSRP: ${RSRP} RSRQ: ${RSRQ}"
+;;
+"imsi")
+        echo -n `/usr/share/moat AT+CIMI | grep -oE '[0-9]+'`
+;;
+"cgmr")
+        echo -n `/usr/share/moat AT+CGMR | awk 'NR==4'`
+;;
+"cellid")
+        CGREG=`/usr/share/moat AT+CGREG=2`
+        lac_hex=`/usr/share/moat AT+CGREG? | awk -F': ' '/\+CGREG:/{print $2}' | cut -d',' -f3 | tr -d '"'`
+        lac_value=$(printf "%d" 0x$lac_hex)
+        ci_hex=`/usr/share/moat AT+CGREG? | awk -F': ' '/\+CGREG:/{print $2}' | cut -d',' -f4 | tr -d '"'`
+        ci_value=$(printf "%d" 0x$ci_hex)
+        echo -n "LAC: ${lac_value} CI: ${ci_value}"
+;;
+"sim_sel")
+        Sim_Sel=`uci get ec200a.ec200a.sim_sel`
+        case "$Sim_Sel" in
+        0)
+        selected_item="外置SIM卡"
+        ;;
+        1)
+        selected_item="内置SIM1"
+        ;;
+        2)
+        selected_item="内置SIM2"
+        ;;
+        *)
+        selected_item="错误状态"
+        ;;
+        esac
+        echo -n $selected_item
+;;
+"restart")
+        restart=`/usr/share/moat "AT+CFUN=1,1"`
+;;
+"status")
+        cat /sys/kernel/debug/usb/devices | grep 6005 > /dev/null && exit 0 || exit 1
+;;
+*)
+exit 2
+esac
+}
