@@ -52,11 +52,11 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/usr/share/mosms $(1)/usr/share/  
 	$(INSTALL_BIN) ./files/etc/init.d/ec200a $(1)/etc/init.d  
       # 确保可执行文件具有执行权限  
-    chmod 755 $(1)/usr/share/ec200a.sh  
-    chmod 755 $(1)/usr/share/moat
-    chmod 755 $(1)/usr/share/moimei 
-    chmod 755 $(1)/usr/share/mosms 
-	chmod 755 $(1)/etc/init.d/ec200a
+    # chmod 755 $(1)/usr/share/ec200a.sh  
+    # chmod 755 $(1)/usr/share/moat
+    # chmod 755 $(1)/usr/share/moimei 
+    # chmod 755 $(1)/usr/share/mosms 
+	# chmod 755 $(1)/etc/init.d/ec200a
 	# 安装Lua文件到标准目录  
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller/  
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/model/cbi/  
