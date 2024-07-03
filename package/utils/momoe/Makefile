@@ -45,17 +45,6 @@ define Build/Compile
 endef
  
 define Package/$(PKG_NAME)/install
-    $(INSTALL_DIR) $(1)/etc/config
-    $(INSTALL_CONF) ./files/hello.conf $(1)/etc/config/hello
-    
-    $(INSTALL_DIR) $(1)/etc/init.d
-    $(INSTALL_BIN) ./files/hello.init $(1)/etc/init.d/hello
-    
-    $(INSTALL_DIR) $(1)/usr/sbin
-    $(INSTALL_BIN) $(PKG_BUILD_DIR)/hello $(1)/usr/sbin/hello
-
-
-
 	$(INSTALL_DIR) $(1)/usr/share  
 	$(INSTALL_BIN) ./files/usr/share/ec200a.sh $(1)/usr/share/  
 	$(INSTALL_BIN) ./files/usr/share/moat $(1)/usr/share/  
